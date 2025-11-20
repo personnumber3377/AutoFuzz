@@ -13,4 +13,4 @@ export CXXFLAGS="-fsanitize=address,undefined,fuzzer-no-link -g -O3"
 export LIB_FUZZING_ENGINE="-fsanitize=fuzzer" # Actually link the fuzzer here too...
 export OUT="$(realpath "$SCRIPT_DIR/../../work")"
 
-echo $OUT
+# echo $OUT
