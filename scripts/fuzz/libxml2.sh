@@ -1,5 +1,10 @@
 #!/bin/bash -eu
 
+# Get the source code and cd into it...
+
+git clone --depth 1 https://gitlab.gnome.org/GNOME/libxml2.git
+cd libxml2
+
 # OSS-Fuzz integration, see
 # https://github.com/google/oss-fuzz/tree/master/projects/libxml2
 
@@ -33,30 +38,3 @@ export V=1
     --without-python \
     $CONFIG
 make -j$(nproc)
-
-cd fuzz
-make clean-corpus
-make fuzz.o
-
-for fuzzer in \
-    api html lint reader regexp schema uri valid xinclude xml xpath
-do
-    OBJS="$fuzzer.o"
-    if [ "$fuzzer" = lint ]; then
-        OBJS="$OBJS ../xmllint.o ../shell.o"
-    fi
-    make $OBJS
-    # Link with $CXX
-    $CXX $CXXFLAGS \
-        $OBJS fuzz.o \
-        -o $OUT/$fuzzer \
-        $LIB_FUZZING_ENGINE \
-        ../.libs/libxml2.a -Wl,-Bstatic -lz -Wl,-Bdynamic
-
-    if [ $fuzzer != api ]; then
-        [ -e seed/$fuzzer ] || make seed/$fuzzer.stamp
-        zip -j $OUT/${fuzzer}_seed_corpus.zip seed/$fuzzer/*
-    fi
-done
-
-cp *.dict *.options $OUT/

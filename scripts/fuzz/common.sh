@@ -14,5 +14,8 @@ export LIB_FUZZING_ENGINE="-fsanitize=fuzzer" # Actually link the fuzzer here to
 export OUT="$(realpath "$SCRIPT_DIR/../../fuzz_bin/")"
 export WORK="$(realpath "$SCRIPT_DIR/../../work/")"
 
+# Finally actually go to the WORK directory...
+
+cd $WORK
 
 # echo $OUT

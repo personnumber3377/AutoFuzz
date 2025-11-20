@@ -80,7 +80,10 @@ def main():
 		# build_script = SCRIPTS_DIR / "fuzz"
 		# env["OUT_DIR"] = str(FUZZ_BIN_DIR)
 		# run_script(build_script, env)
-		cmd = """ bash -c 'source ./scripts/fuzz/common.sh ; source ./scripts/fuzz/{}.sh' """.format(target) # Put the target thing...
+		pwd = env["PWD"]
+		# cmd = """ bash -c 'source ./scripts/fuzz/common.sh ; source ./scripts/fuzz/{}.sh ; source ./scripts/fuzz/{}_only_fuzzers.sh' """.format(target, target) # Put the target thing...
+		cmd = """ bash -c 'source {}/scripts/fuzz/common.sh ; source {}/scripts/fuzz/{}.sh ; source {}/scripts/fuzz/{}_only_fuzzers.sh' """.format(pwd, pwd, target, pwd, target) # Put the target thing...
+		
 		subprocess.run(cmd, shell=True)
 
 
